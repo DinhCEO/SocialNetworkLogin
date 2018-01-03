@@ -37,11 +37,12 @@ app.get('/getProfile', (req, res) => {
 
     auth.login(credential.getCredential())
         .then(user => {
-            if (!user) {
-                return res.redirect('/login');
-            }
             res.render('profile.html', {user: user});
+        })
+        .catch(() => {
+            return res.redirect('/login');
         });
+
 });
 app.listen(PORT, () => {
     console.log(`Server listening port ${PORT}`);

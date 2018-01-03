@@ -24,8 +24,8 @@ class Facebook {
                     userFormat.size   = 50;
                     resolve(userFormat);
                 })
-                .catch(() => {
-                    reject(null);
+                .catch((error) => {
+                    reject({error});
                 });
         });
     }
