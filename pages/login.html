@@ -23,7 +23,7 @@
                 </a>
             </div>
             <div class="col-xs-4 col-sm-2">
-                <a href="#" class="btn btn-lg btn-block omb_btn-twitter">
+                <a onclick="loginByTwitter();" class="btn btn-lg btn-block omb_btn-twitter">
                     <i class="fa fa-twitter visible-xs"></i>
                     <span class="hidden-xs">Twitter</span>
                 </a>
@@ -55,7 +55,8 @@
 
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                        <input type="password" autocomplete="off" class="form-control" name="password" placeholder="Password">
+                        <input type="password" autocomplete="off" class="form-control" name="password"
+                               placeholder="Password">
                     </div>
                     <br/>
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
@@ -120,6 +121,29 @@
             callApi(response['Zi'].access_token, 'google')
         });
     }
+
+    function loginByTwitter() {
+        $.get('/twitter/login', function (data) {
+            window.location.href = data.link;
+        });
+    }
+
+    window.twttr = (function (d, s, id) {
+        let js, fjs = d.getElementsByTagName(s)[0],
+            t       = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js     = d.createElement(s);
+        js.id  = id;
+        js.src = 'https://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e    = [];
+        t.ready = function (f) {
+            t._e.push(f);
+        };
+
+        return t;
+    }(document, 'script', 'twitter-wjs'));
 </script>
 </body>
 </html>
