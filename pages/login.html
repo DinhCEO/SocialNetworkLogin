@@ -8,6 +8,7 @@
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/assets/style.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 <body>
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
@@ -28,7 +29,7 @@
                 </a>
             </div>
             <div class="col-xs-4 col-sm-2">
-                <a href="#" class="btn btn-lg btn-block omb_btn-google">
+                <a onclick="loginByGoogle();" class="btn btn-lg btn-block omb_btn-google">
                     <i class="fa fa-google-plus visible-xs"></i>
                     <span class="hidden-xs">Google+</span>
                 </a>
@@ -47,14 +48,14 @@
                 <form class="omb_loginForm" action="" autocomplete="off" method="POST">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                        <input autocomplete="false" type="text" class="form-control" name="username"
+                        <input autocomplete="off" type="text" class="form-control" name="username"
                                placeholder="email address">
                     </div>
                     <span class="help-block"></span>
 
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                        <input type="password" class="form-control" name="password" placeholder="Password">
+                        <input type="password" autocomplete="off" class="form-control" name="password" placeholder="Password">
                     </div>
                     <br/>
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
@@ -97,13 +98,27 @@
     function fbLogin() {
         FB.login(function (response) {
             if (response.status === 'connected') {
-                callApi(response['authResponse'].accessToken);
+                callApi(response['authResponse']['accessToken'], 'facebook');
             }
         });
     }
 
-    function callApi(accessToken) {
-        window.location.href = `/getProfile?accessToken=${accessToken}`;
+    function callApi(accessToken, type) {
+        window.location.href = `/getProfile?accessToken=${accessToken}&type=${type}`;
+    }
+
+    window.gapi.load('auth2', function () {
+        auth2 = gapi.auth2.init({
+            client_id          : '86410706494-e3agv0a5hhhup63u61nmq0edditb75ap.apps.googleusercontent.com',
+            fetch_basic_profile: false,
+            scope              : 'profile'
+        });
+    });
+
+    function loginByGoogle() {
+        auth2.signIn().then(function (response) {
+            callApi(response['Zi'].access_token, 'google')
+        });
     }
 </script>
 </body>
