@@ -15,13 +15,12 @@ const PORT                    = process.env.PORT;
 const FB_APP_ID               = process.env.fb_app_id;
 const TWITTER_LINK            = process.env.twitter_link;
 const INSTAGRAM_CLIENT_ID     = process.env.instagram_client_id;
-const INSTAGRAM_CLIENT_SECRET = process.env.instagram_client_secret;
 const INSTAGRAM_CALLBACK_URL  = process.env.instagram_callback_url;
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/assets', express.static('assets'));
-nunjucks.configure('pages', {
+nunjucks.configure('views', {
     express   : app,
     autoescape: true
 });

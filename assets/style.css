@@ -152,6 +152,10 @@ body {
     background: #8a3ab9;
 }
 
+.omb_login .omb_socialButtons .omb_btn-pinterest {
+    background: #bd081c;
+}
+
 .omb_login .omb_loginOr {
     position: relative;
     font-size: 1.5em;
