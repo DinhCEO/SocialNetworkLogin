@@ -1,17 +1,22 @@
 require('dotenv').config();
-const express        = require('express');
-const cors           = require('cors');
-const bodyParser     = require('body-parser');
-const nunjucks       = require('nunjucks');
-const authProvider   = require('./auth/auth.provider');
-const Credential     = require('./auth/credentials');
-const TwitterService = require('./auth/service/twitter-service');
-const twitterService = new TwitterService();
+const express          = require('express');
+const cors             = require('cors');
+const bodyParser       = require('body-parser');
+const nunjucks         = require('nunjucks');
+const authProvider     = require('./auth/auth.provider');
+const Credential       = require('./auth/credentials');
+const TwitterService   = require('./auth/service/twitter-service');
+const InstagramService = require('./auth/service/instagram-service');
+const twitterService   = new TwitterService();
+const instagramService = new InstagramService();
 
-const app          = express();
-const PORT         = process.env.PORT;
-const FB_APP_ID    = process.env.fb_app_id;
-const TWITTER_LINK = process.env.twitter_link;
+const app                     = express();
+const PORT                    = process.env.PORT;
+const FB_APP_ID               = process.env.fb_app_id;
+const TWITTER_LINK            = process.env.twitter_link;
+const INSTAGRAM_CLIENT_ID     = process.env.instagram_client_id;
+const INSTAGRAM_CLIENT_SECRET = process.env.instagram_client_secret;
+const INSTAGRAM_CALLBACK_URL  = process.env.instagram_callback_url;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -35,6 +40,30 @@ app.get('/twitter/login', (req, res) => {
         .then(({requestToken, requestTokenSecret}) => {
             request_token_secret = requestTokenSecret;
             res.status(200).json({requestToken, requestTokenSecret, link: TWITTER_LINK + requestToken});
+        })
+        .catch(() => {
+            return res.redirect('/login');
+        });
+});
+
+app.get('/instagram/login', (req, res) => {
+    res.status(200).json({link: `https://api.instagram.com/oauth/authorize/?client_id=${INSTAGRAM_CLIENT_ID}&redirect_uri=${INSTAGRAM_CALLBACK_URL}&response_type=code`});
+});
+
+app.get('/instagram/callback', (req, res) => {
+    let code = req.query['code'];
+    if (!code) {
+        return res.status(400).json({msg: 'Login by instagram failed!'})
+    }
+    instagramService.getProfile(code)
+        .then((result) => {
+            let userFormat    = {};
+            userFormat.email  = '';
+            userFormat.name   = result.user['full_name'];
+            userFormat.avatar = result.user['profile_picture'];
+            userFormat.link   = '';
+            userFormat.size   = 50;
+            res.render('profile.html', {user: userFormat});
         })
         .catch(() => {
             return res.redirect('/login');

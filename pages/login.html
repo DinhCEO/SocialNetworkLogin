@@ -35,6 +35,13 @@
                 </a>
             </div>
         </div>
+        <div class="row omb_row-sm-offset-3 omb_socialButtons" style="margin-top: 20px">
+            <div class="col-xs-4 col-sm-2">
+                <a onclick="loginByInstagram();" class="btn btn-lg btn-block omb_btn-instagram">
+                    <span class="hidden-xs">Instagram</span>
+                </a>
+            </div>
+        </div>
 
         <div class="row omb_row-sm-offset-3 omb_loginOr">
             <div class="col-xs-12 col-sm-6">
@@ -126,6 +133,11 @@
         $.get('/twitter/login', function (data) {
             window.location.href = data.link;
         });
+    }
+    function loginByInstagram() {
+        $.get('/instagram/login',function (data) {
+            window.location.href = data.link;
+        })
     }
 
     window.twttr = (function (d, s, id) {
