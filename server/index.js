@@ -10,12 +10,17 @@ const InstagramService = require('./auth/service/instagram-service');
 const twitterService   = new TwitterService();
 const instagramService = new InstagramService();
 
-const app                     = express();
-const PORT                    = process.env.PORT;
-const FB_APP_ID               = process.env.fb_app_id;
-const TWITTER_LINK            = process.env.twitter_link;
-const INSTAGRAM_CLIENT_ID     = process.env.instagram_client_id;
-const INSTAGRAM_CALLBACK_URL  = process.env.instagram_callback_url;
+const config = require('./config');
+const Acl    = require('acl');
+
+const acl = new Acl(new Acl.memoryBackend());
+
+const app                    = express();
+const PORT                   = process.env.PORT;
+const FB_APP_ID              = process.env.fb_app_id;
+const TWITTER_LINK           = process.env.twitter_link;
+const INSTAGRAM_CLIENT_ID    = process.env.instagram_client_id;
+const INSTAGRAM_CALLBACK_URL = process.env.instagram_callback_url;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -24,6 +29,8 @@ nunjucks.configure('views', {
     express   : app,
     autoescape: true
 });
+
+acl.allow(config.acl.rules);
 
 
 app.get('/', (req, res) => {
