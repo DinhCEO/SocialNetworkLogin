@@ -14,7 +14,13 @@ module.exports = {
         }
     },
     providers: [
-        require('./../app/http/http.provider'),
+        require('app/http/http.provider'),
+        require('fusion/routing/routing.provider'),
+        require('fusion/meta_injector/meta-injector.provider'),
         //other provider
     ],
+    injects  : [
+        require('app/http/controller/HomeController')
+    ],
+    routes   : require('./routes'),
 };

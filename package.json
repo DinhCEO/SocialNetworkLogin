@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/DinhCEO/SocialNetworkLogin#readme",
   "dependencies": {
+    "app-module-path": "^2.2.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "dotenv": "^4.0.0",
